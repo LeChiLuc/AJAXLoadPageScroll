@@ -1,0 +1,11 @@
+﻿@model DoAn.Web.Models.CustomHeaderViewModel
+<style>
+    .banner{
+        background-color: @Model.Color;
+        padding: @(Model.PaddingTop)px 0 0 0;
+		height: @(Model.Height)px;
+    }
+</style>
+<div class=".col-md-9 .col-md-offset-1 .maxheight banner" >
+    @Html.Raw(Model.Content)
+</div>

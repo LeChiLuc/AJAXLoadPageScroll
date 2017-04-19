@@ -1,0 +1,13 @@
+﻿@model DoAn.Web.Models.CustomImageViewModel
+<div class=".col-md-2 maxheight">
+    <div class="img-responsive logoheader pull-left">
+        @if (Model != null)
+        {
+            <img class="maxheight" src="@Model.Images" />
+        }
+        else
+        {
+            <img class="maxheight" src="~/Assets/admin/img/no-Image.png" />
+        }
+    </div>
+</div>

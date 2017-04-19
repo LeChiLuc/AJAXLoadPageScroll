@@ -1,0 +1,138 @@
+﻿@model DoAn.Web.Models.ControlPanelViewModel
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ Html.RenderAction("Background", "Home");}
+@if (Model != null)
+{
+    @section scripts{
+        <script type="text/javascript">
+
+            var pageSize = 15;
+            var pageIndex = 0;
+
+            $(document).ready(function () {
+                GetData();
+
+                $(window).scroll(function () {
+                    if ($(window).scrollTop() ==
+                        $(document).height() - $(window).height()) {
+                        GetData();
+                    }
+                });
+            });
+
+            function GetData() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/getDonation',
+                    data: { "pageindex": pageIndex, "pagesize": pageSize },
+                    dataType: 'json',
+                    success: function (data) {
+                        var html = '';
+                        var template = $('#data-template').html();
+                        if (data != null) {
+                            var i = 0;
+                            $.each(data, function (i, item) {
+                                html += Mustache.render(template, {
+                                    Name: item.Name,
+                                    Class: item.Class,
+                                    Price: formatMoneyVND(item.Price),
+                                    Address: item.Address,
+                                    Note: item.Note
+                                });
+                            });
+                            $('#tblData').append(html);
+                            pageIndex++;
+                        }
+                    },
+                    beforeSend: function () {
+                        $("#progress").show();
+                    },
+                    complete: function () {
+                        $("#progress").hide();
+                    },
+                    error: function () {
+                        alert("Error while retrieving data!");
+                    }
+                });
+            }
+        </script>
+    }
+
+    @RenderPage("_donationList.cshtml")
+}
+else
+{
+    @section scripts{
+
+        <script type="text/javascript">
+
+            var pageSize = 15;
+            var pageIndex = 0;
+
+            $(document).ready(function () {
+                GetData();
+
+                $(window).scroll(function () {
+                    if ($(window).scrollTop() ==
+                        $(document).height() - $(window).height()) {
+                        GetData();
+                    }
+                });
+            });
+
+            function GetData() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Home/getLaudatories',
+                    data: { "pageindex": pageIndex, "pagesize": pageSize },
+                    dataType: 'json',
+                    success: function (data) {
+                        var html = '';
+                        var template = $('#data-template').html();
+                        if (data != null) {
+                            var i = 0;
+                            $.each(data, function (i, item) {
+                                html += Mustache.render(template, {
+                                    Stt: i++,
+                                    Name: item.Name,
+                                    Class: item.Class,
+                                    Appellation: item.Appellation,
+                                    CountBook: item.CountBook,
+                                    Note: item.Note 
+                                });
+                            });
+                            $('#tblData').append(html);
+                            pageIndex++;
+                        }
+                    },
+                    beforeSend: function () {
+                        $("#progress").show();
+                    },
+                    complete: function () {
+                        $("#progress").hide();
+                    },
+                    error: function () {
+                        alert("Error while retrieving data!");
+                    }
+                });
+            }
+
+
+           
+        </script>
+    }
+
+    @RenderPage("_laudatoryList.cshtml")
+}
+
+<div id="container"></div>
+
+<div id="progress" style="text-align: center; display: none; margin-bottom: 20px;">
+    <h4>
+        <img alt="Loading" src="@Url.Content("~/Assets/client/Images/ajax-loader.gif")" />
+    </h4>
+</div>
